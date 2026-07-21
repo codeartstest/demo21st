@@ -221,23 +221,29 @@
     }
   }
 
+  function handleButtonClick(event) {
+    const target = event.target.closest('button');
+    if (!target) return;
+    const action = target.dataset.action;
+    switch (action) {
+      case 'digit': inputDigit(target.dataset.digit); break;
+      case 'decimal': inputDecimal(); break;
+      case 'operator': chooseOperation(target.dataset.op); break;
+      case 'equals': handleEquals(); break;
+      case 'clear': clearAll(); break;
+      case 'clear-entry': clearEntry(); break;
+      case 'backspace': backspace(); break;
+      case 'sign': toggleSign(); break;
+      case 'percent': applyPercent(); break;
+    }
+  }
+
   function bind() {
-    els.grid.addEventListener('click', (event) => {
-      const target = event.target.closest('button');
-      if (!target) return;
-      const action = target.dataset.action;
-      switch (action) {
-        case 'digit': inputDigit(target.dataset.digit); break;
-        case 'decimal': inputDecimal(); break;
-        case 'operator': chooseOperation(target.dataset.op); break;
-        case 'equals': handleEquals(); break;
-        case 'clear': clearAll(); break;
-        case 'clear-entry': clearEntry(); break;
-        case 'backspace': backspace(); break;
-        case 'sign': toggleSign(); break;
-        case 'percent': applyPercent(); break;
-      }
-    });
+    els.grid.addEventListener('click', handleButtonClick);
+    const equalsBtn = document.querySelector('[data-action="equals"]');
+    if (equalsBtn && !els.grid.contains(equalsBtn)) {
+      equalsBtn.addEventListener('click', handleButtonClick);
+    }
     window.addEventListener('keydown', handleKey);
   }
 

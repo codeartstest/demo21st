@@ -1,0 +1,2 @@
+﻿Set-Location "C:\Users\lenovo-thinkpad\IDEProjects\demo21stJuly\demo21st\backend"
+Start-Process -FilePath "python" -ArgumentList "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" -PassThru | Select-Object Id

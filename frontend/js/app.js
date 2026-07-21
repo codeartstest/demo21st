@@ -94,7 +94,7 @@
     render();
   }
 
-  function chooseOperation(op) {
+  async function chooseOperation(op) {
     if (state.error || state.busy) return;
     const { valid, value, error } = Calculator.validateInput(state.displayValue);
     if (!valid) {
@@ -104,7 +104,16 @@
     if (state.storedValue === null) {
       state.storedValue = value;
     } else if (state.pendingOperation && !state.waitingForOperand) {
-      performPending(value, true);
+      state.busy = true;
+      render();
+      try {
+        await performPending(value, true);
+      } catch (err) {
+        showError(err.message);
+        return;
+      } finally {
+        state.busy = false;
+      }
       if (state.error) {
         render();
         return;
@@ -115,9 +124,9 @@
     render();
   }
 
-  function performPending(currentValue, chain) {
+  async function performPending(currentValue, chain) {
     if (state.storedValue === null || !state.pendingOperation) return;
-    const result = Calculator.calculate(state.storedValue, currentValue, state.pendingOperation);
+    const result = await Calculator.calculate(state.storedValue, currentValue, state.pendingOperation);
     state.storedValue = result;
     if (!chain) {
       state.pendingOperation = null;

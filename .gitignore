@@ -1,0 +1,6 @@
+.env
+.arts/
+.playwright-cli/
+.vscode/
+demo21st/
+skills-lock.json
